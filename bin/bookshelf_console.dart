@@ -18,7 +18,7 @@ void main(List<String> arguments) {
   final int year = int.tryParse(stdin.readLineSync() ?? '') ?? 0;
 
   stdout.write('Количество страниц: ');
-  final int pages = int.tryParse(stdin.readLineSync() ?? '') ?? 0; 
+  final int pages = int.tryParse(stdin.readLineSync() ?? '') ?? 0;
 
   stdout.write('Оценка(0-5): ');
   final double rating = double.tryParse(stdin.readLineSync() ?? '') ?? 0.0;
@@ -26,20 +26,24 @@ void main(List<String> arguments) {
   stdout.write('Прочитана?:');
   final String readR = (stdin.readLineSync() ?? '').trim().toLowerCase();
   final bool isRead = readR == 'да';
-  
+
   //Задание 3.
-  final String category = pages < 150 ? 'брошюра' : pages < 400 ? 'книга' : 'том';
-  final double hours = pages/50.0;
+  final String category = pages < 150
+      ? 'брошюра'
+      : pages < 400
+      ? 'книга'
+      : 'том';
+  final double hours = pages / 50.0;
   final int currentYear = DateTime.now().year;
-  final int age =currentYear - year;
+  final int age = currentYear - year;
 
   final String initials = author
-  .split(' ')
-  .where((w)=>w.isNotEmpty)
-  .map((w)=>'${w[0].toUpperCase()}.')
-  .join(' ');
+      .split(' ')
+      .where((w) => w.isNotEmpty)
+      .map((w) => '${w[0].toUpperCase()}.')
+      .join(' ');
   print('');
-  print('='*44);
+  print('=' * 44);
   print('«$title»');
   print('Авторы: $author');
   print('Инициалы: $initials');
@@ -48,7 +52,7 @@ void main(List<String> arguments) {
   print('Время чтения: ~${hours.toStringAsFixed(1)} ч');
   print('Оценка: ${rating.toStringAsFixed(1)}/5');
   print('Прочитана: ${isRead ? "да" : "нет"}');
-  print('='*44);
+  print('=' * 44);
 
   //Задание 4.
   final List<String> shelf = <String>[
@@ -71,12 +75,12 @@ void main(List<String> arguments) {
   stdout.write('\nЖанры через запятую: ');
   final String genresRaw = stdin.readLineSync() ?? '';
   final Set<String> genres = genresRaw
-  .split(',')
-  .map((g)=>g.trim())
-  .where((g)=>g.isNotEmpty)
-  .toSet();
+      .split(',')
+      .map((g) => g.trim())
+      .where((g) => g.isNotEmpty)
+      .toSet();
   genres.add('магический реализм');
-  genres.add('магический реализм');//дубликат не добавится
+  genres.add('магический реализм'); //дубликат не добавится
   print('Жанры: $genres(уникальных: ${genres.length})');
 
   final Map<String, int> pagesByBook = <String, int>{
@@ -87,22 +91,24 @@ void main(List<String> arguments) {
     '1Q84': 1152,
   };
 
-  pagesByBook.forEach((book, p)=> print('$book - $p стр.'));
+  pagesByBook.forEach((book, p) => print('$book - $p стр.'));
 
   String maxBook = '';
   int maxPages = 0;
   int total = 0;
-  pagesByBook.forEach((book,p){
+  pagesByBook.forEach((book, p) {
     total += p;
-    if(p>maxPages){
+    if (p > maxPages) {
       maxPages = p;
       maxBook = book;
     }
   });
   print('Самая толстая: $maxBook ($maxPages стр.)');
-  print('Всего: $total, в среднем:'
-  '${(total/pagesByBook.length).toStringAsFixed(1)}');
-  
+  print(
+    'Всего: $total, в среднем:'
+    '${(total / pagesByBook.length).toStringAsFixed(1)}',
+  );
+
   final bool includeExtra = true;
   final List<String> all = <String>[
     'стартовая полка',
@@ -118,10 +124,11 @@ void main(List<String> arguments) {
   print('7 ~/ 2=${7 ~/ 2}');
   print('7 % 2 = ${7 % 2}');
 
-  bool sideEffect(){
+  bool sideEffect() {
     print(' sideEffect вызван ');
     return true;
   }
+
   print(false && sideEffect());
   print(true || sideEffect());
   print(true && sideEffect());
@@ -140,9 +147,9 @@ void main(List<String> arguments) {
   print('constList: $constList');
 
   final StringBuffer sb = StringBuffer()
-  ..write('Book')
-  ..write('Shelf')
-  ..write('-')
-  ..write('каталог книг');
+    ..write('Book')
+    ..write('Shelf')
+    ..write('-')
+    ..write('каталог книг');
   print(sb.toString());
 }
