@@ -120,6 +120,10 @@ void main(List<String> arguments) {
 
   //Задание 5.
   print('\n   Операторы   ');
+  
+  // "/" - вещественное деление: 7 / 2 = 3.5
+  // "~/" - целочисленное деление: 7 ~/ 2 = 3
+  // "%" - остаток от деления: 7 % 2 = 1
   print('7 / 2=${7 / 2}');
   print('7 ~/ 2=${7 ~/ 2}');
   print('7 % 2 = ${7 % 2}');
@@ -129,23 +133,35 @@ void main(List<String> arguments) {
     return true;
   }
 
+  //false && ... - правый операнд не вычисляется (ленивость &&)
+  //ignore: dead_code
   print(false && sideEffect());
+
+  //true || ... - правый операнд не вычисляется (ленивость ||)
+  //ignore: dead_code
   print(true || sideEffect());
+
+  // true && ... - правый операнд вычисляется 
   print(true && sideEffect());
 
   String? maybeNull;
+  // ?. - безопасный доступ, ?? - значение по умолчанию, ??= - присвоить если null
+  //ignore: dead_code
   print(maybeNull?.length);
   print(maybeNull ?? 'по умолчанию');
   maybeNull ??= 'заполнено';
   print(maybeNull);
 
+  // ссылку менять нельзя, содержимое можно
   final List<int> finalList = [1, 2, 3];
   finalList.add(4);
   print('finalList: $finalList');
 
+  // можно менять и ссылку, и содержимое
   const List<int> constList = [1, 2, 3];
   print('constList: $constList');
 
+  // каскад .. - цепочка вызовов на одном объекте без промежуточных переменных 
   final StringBuffer sb = StringBuffer()
     ..write('Book')
     ..write('Shelf')
