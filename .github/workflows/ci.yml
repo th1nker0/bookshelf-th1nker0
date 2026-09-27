@@ -1,0 +1,82 @@
+# Автоматическая проверка перед ревью.
+# Красный результат означает, что работа к проверке не принимается:
+# приведите код в порядок и запушьте в ту же ветку — проверка запустится заново.
+
+name: Проверка работы
+
+on:
+  pull_request:
+    branches: [main]
+
+# Достаточно проверять последний коммит: предыдущие запуски отменяются,
+# чтобы не расходовать минуты Actions впустую.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Форматирование, анализ, тесты
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Версия закреплена намеренно. Если её не фиксировать, CI будет
+      # обновляться сам и разойдётся с тем, что стоит у студентов: правила
+      # dart format между версиями меняются, и работа, отформатированная
+      # локально, начнёт краснеть в проверке. Менять только вместе с
+      # требованием в README.
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.5'
+          channel: stable
+          cache: true
+
+      - name: Версия инструментов
+        run: |
+          flutter --version
+          dart --version
+
+      # --- Консольный проект: занятия 1–5 ---------------------------------
+      - name: Консольный проект — зависимости
+        if: hashFiles('bookshelf_console/pubspec.yaml') != ''
+        working-directory: bookshelf_console
+        run: dart pub get
+
+      - name: Консольный проект — форматирование
+        if: hashFiles('bookshelf_console/pubspec.yaml') != ''
+        working-directory: bookshelf_console
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Консольный проект — статический анализ
+        if: hashFiles('bookshelf_console/pubspec.yaml') != ''
+        working-directory: bookshelf_console
+        run: dart analyze
+
+      - name: Консольный проект — тесты
+        if: hashFiles('bookshelf_console/test/**') != ''
+        working-directory: bookshelf_console
+        run: dart test
+
+      # --- Flutter-проект: занятия 6–13 -----------------------------------
+      - name: Flutter-проект — зависимости
+        if: hashFiles('bookshelf/pubspec.yaml') != ''
+        working-directory: bookshelf
+        run: flutter pub get
+
+      - name: Flutter-проект — форматирование
+        if: hashFiles('bookshelf/pubspec.yaml') != ''
+        working-directory: bookshelf
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Flutter-проект — статический анализ
+        if: hashFiles('bookshelf/pubspec.yaml') != ''
+        working-directory: bookshelf
+        run: flutter analyze
+
+      - name: Flutter-проект — тесты
+        if: hashFiles('bookshelf/test/**') != ''
+        working-directory: bookshelf
+        run: flutter test
